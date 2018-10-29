@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.fes.dao.mappers.UserCustomerMapper">
+    <resultMap type="com.fes.dao.domain.UserCustomer" id="customerResult">
+        <result column="id" property="id"/>
+        <result column="class_id_list" property="classIdList"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="user_name" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="password" property="password"/>
+        <result column="address" property="address"/>
+        <result column="phone_num" property="phoneNum"/>
+        <result column="desc" property="desc"/>
+        <result column="organization_id" property="organizationId"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        id, class_id_list, first_name, last_name, user_name, sex, password, address, phone_num, `desc`, organization_id
+    </sql>
+
+    <insert id="insertCustomer" parameterType="com.fes.dao.domain.UserCustomer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_customer(class_id_list, first_name, last_name, user_name, sex, password, address, phone_num, `desc`, organization_id)
+        VALUES(#{classIdList},#{firstName},#{lastName},#{username},#{sex},#{password},#{address},#{phoneNum},#{desc},#{organizationId})
+    </insert>
+
+    <select id="getAllCustomerInfo" resultMap="customerResult">
+        select
+        <include refid="baseColumns"/>
+        from user_customer
+    </select>
+
+    <select id="selectByName" resultMap="customerResult" parameterType="string">
+        select
+        <include refid="baseColumns"/>
+        from user_customer where user_name=#{username}
+    </select>
+	<update id="update" parameterType="com.fes.dao.domain.UserCustomer">
+		update user_customer set
+
+	  	password=#{password}, first_name=#{firstName}, last_name=#{lastName}, sex=#{sex}
+        <if test="address != null">
+               ,address=#{address}
+        </if>
+
+        <if test="phoneNum != null">
+            ,phone_num=#{phoneNum}
+        </if>
+
+        <if test="desc != null">
+            ,`desc`=#{desc}
+        </if>
+
+        <if test="organizationId != 0">
+            ,organization_id=#{organizationId}
+        </if>
+
+		where id = #{id}
+	</update>
+
+
+    <select id="selectById" resultMap="customerResult" parameterType="int">
+        select
+        <include refid="baseColumns"/>
+        from user_customer where id=#{id}
+    </select>
+    
+    <delete id="deleteCustomer" parameterType="int">
+        delete
+        from user_customer where id=#{id}
+    </delete>
+
+    <select id="selectByIds" resultMap="customerResult" parameterType="int">
+        select
+        <include refid="baseColumns"/>
+        from user_customer where id in
+        <foreach collection="ids" index="index" open="(" item="id" close=")" separator=",">
+          #{item}
+        </foreach>
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fes.dao.mappers.ClassItemMapper">
+    <resultMap type="com.fes.dao.domain.ClassItemPO" id="classItemResult">
+        <result column="id" property="id"/>
+        <result column="class_id" property="classId"/>
+        <result column="class_date" property="classDate"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="equipment_consumption" property="equipConsumption"/>
+        <result column="attendant_students_num" property="attendantStudentsNum"/>
+        <result column="attendant_students" property="attendantStudents"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        id,class_id,class_date,equipment_consumption,attendant_students_num,attendant_students,start_time,end_time
+    </sql>
+
+    <insert id="insert" parameterType="com.fes.dao.domain.ClassItemPO">
+        INSERT INTO class_item(class_id,class_date,equipment_consumption,attendant_students_num,attendant_students,start_time,end_time)
+        VALUES(#{classId},#{classDate},#{equipConsumption},#{attendantStudentsNum},#{attendantStudents},#{startTime},#{endTime})
+    </insert>
+
+    <select id="getClassItemByClassId" resultMap="classItemResult">
+        select
+        <include refid="baseColumns"/>
+        from class_item where class_id=#{classId}
+    </select>
+
+    <select id="getClassItemByClassIds" resultMap="classItemResult">
+        select
+        <include refid="baseColumns"/>
+        from class_item where class_id in
+        <foreach collection="classIds" index="index" open="(" item="item" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+</mapper>

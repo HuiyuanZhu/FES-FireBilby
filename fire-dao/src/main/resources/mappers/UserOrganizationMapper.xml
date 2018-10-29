@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fes.dao.mappers.UserOrganizationMapper">
+    <resultMap type="com.fes.dao.domain.UserOrganization" id="orgResult">
+        <result column="id" property="id"/>
+        <result column="class_id_list" property="classIdList"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="user_name" property="username"/>
+        <result column="user_id_list" property="userIdList"/>
+        <result column="password" property="password"/>
+        <result column="address" property="address"/>
+        <result column="desc" property="desc"/>
+        <result column="people_num" property="peopleNum"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        id,class_id_list,organization_name,user_name,user_id_list,password,address,`desc`,people_num
+    </sql>
+
+    <insert id="insertCustomer" parameterType="com.fes.dao.domain.UserOrganization">
+        INSERT INTO user_organization(class_id_list,organization_name,user_name,user_id_list,password,address,
+        `desc`,people_num)
+        VALUES(#{classIdList},#{organizationName},#{username},#{userIdList},#{password},#{address},#{desc},#{peopleNum})
+    </insert>
+
+    <select id="getAllOrgInfo" resultMap="orgResult">
+        select
+        <include refid="baseColumns"/>
+        from user_organization
+    </select>
+
+    <select id="getOrganization" resultMap="orgResult" parameterType="string">
+        select
+        <include refid="baseColumns"/>
+        from user_organization where user_name=#{username}
+    </select>
+    
+    <select id="showOrganizationByID" resultMap = "orgResult" parameterType = "int">
+    		select 
+    		<include refid="baseColumns"/>
+    		from user_organization where id=#{organizationID}
+    </select>
+    
+    <delete id="deleteCustomer" parameterType="int">
+    		delete from user_organization where id=#{id}
+    </delete>
+    
+    <update id="modifyOrganization" parameterType="com.fes.dao.domain.UserOrganization">
+    		update user_organization set 
+    		password=#{password}, user_name=#{username}, address=#{address}, organization_name=#{organizationName}
+    		<if test="classIdList != null">
+               ,class_id_list=#{classIdList}
+        </if>
+        <if test="userIdList != null">
+               ,user_id_list=#{userIdList}
+        </if>
+        <if test="desc != null">
+               ,desc=#{desc}
+        </if>
+        <if test="peopleNum != null">
+               ,people_num=#{peopleNum}
+        </if>
+        where id=#{id}
+    </update>
+
+    <select id="selectMembers" resultType="string" parameterType="int">
+        select user_id_list from user_organization where id=#{id}
+    </select>
+
+    <select id="selectByName" resultType="com.fes.dao.domain.UserOrganization" parameterType="string">
+        select
+        <include refid="baseColumns"/>
+        from user_organization where user_name=#{username}
+    </select>
+
+</mapper>

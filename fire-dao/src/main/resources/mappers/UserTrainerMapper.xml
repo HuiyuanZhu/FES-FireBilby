@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.fes.dao.mappers.UserTrainerMapper">
+    <resultMap type="com.fes.dao.domain.UserTrainer" id="trainerResult">
+        <result column="id" property="id"/>
+        <result column="class_id_list" property="classIdList"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="user_name" property="username"/>
+        <result column="sex" property="sex"/>
+        <result column="password" property="password"/>
+        <result column="address" property="address"/>
+        <result column="phone_num" property="phoneNum"/>
+        <result column="desc" property="desc"/>
+        <result column="availability" property="availability"/>
+        <result column="certification" property="certification"/>
+    </resultMap>
+
+    <sql id="baseColumns">
+        id, class_id_list, first_name, last_name, user_name, sex, password, address, phone_num, `desc`,
+        availability,certification
+    </sql>
+
+    <insert id="insert" parameterType="com.fes.dao.domain.UserTrainer">
+        INSERT INTO user_trainer(class_id_list, first_name, last_name, user_name, sex, password, address,
+        phone_num, `desc`,availability,certification)
+        VALUES(#{classIdList},#{firstName},#{lastName},#{username},#{sex},#{password},#{address},#{phoneNum},#{desc},
+        #{availability},#{certification})
+    </insert>
+
+    <select id="getAllTrainerInfo" resultMap="trainerResult">
+        select
+        <include refid="baseColumns"/>
+        from user_trainer
+    </select>
+
+    <select id="getTrainer" resultMap="trainerResult" parameterType="string">
+        select
+        <include refid="baseColumns"/>
+        from user_trainer where user_name=#{username}
+    </select>
+
+    <select id="getTrainerById" resultMap="trainerResult" parameterType="int">
+        select
+        <include refid="baseColumns"/>
+        from user_trainer where id=#{id}
+    </select>
+
+    <update id="updatePicUrl">
+        update user_customer set pic_url = #{url} where id = #{id}
+    </update>
+
+    <update id="updateProfile">
+        update user_trainer set user_name = #{username}, password = #{password}, first_name=#{firstname},last_name=#{lastname},sex=#{sex},address=#{address},phone_num=#{phoneNum},`desc`=#{desc} where id = #{id}
+    </update>
+
+    <update id="updateAvailability">
+        update user_trainer set availability=#{availability} where id = #{id}
+    </update>
+
+</mapper>
